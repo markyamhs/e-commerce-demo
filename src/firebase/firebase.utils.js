@@ -53,3 +53,23 @@ export const firebaseGoogle = () =>
       var credential = error.credential;
       // ...
     });
+
+export const creatUserProfileDocument = async (userAuth, additionalData) => {
+  if (!userAuth) return;
+  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  const snapShot = await userRef.get();
+  if (!snapShot.exists) {
+    const today = new Date();
+    try {
+      await userRef.set({
+        username: userAuth.displayName,
+        email: userAuth.email,
+        creatdate: today,
+        ...additionalData,
+      });
+    } catch (error) {
+      console.log("error creating user", error.message);
+    }
+  }
+  return userRef;
+};

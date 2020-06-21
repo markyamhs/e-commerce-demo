@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import "./App.css";
 import HomePage from "./components/pages/homepage/homepage.component";
-import { Switch, BrowserRouter, Route } from "react-router-dom";
+import { Switch, BrowserRouter, Route, Redirect } from "react-router-dom";
 import ShopPage from "./components/pages/shop/shop.component";
 import Header from "./components/header/header.component";
 import SignInUpPage from "./components/pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
@@ -11,8 +11,10 @@ import {
   firestore,
   creatUserProfileDocument,
 } from "./firebase/firebase.utils";
+import { connect } from "react-redux";
+import { setCurrentUser } from "./redux/user/user.action";
+
 class App extends Component {
-  state = { currentUser: null };
   unsubscribe = null;
 
   componentDidMount() {
@@ -24,12 +26,15 @@ class App extends Component {
       if (userAuth) {
         const userRef = await creatUserProfileDocument(userAuth);
         userRef.onSnapshot((doc) => {
-          this.setState({ currentUser: { id: doc.id, ...doc.data() } }, () => {
-            console.log(this.state.currentUser);
-          });
+          this.props.setCurrentUsera({ id: doc.id, ...doc.data() });
+          // equivalent to
+          // this.setState({ currentUser: { id: doc.id, ...doc.data() } }, () => {
+          //   console.log(this.state.currentUser);
+          // });
         });
+        console.log(this.props);
       } else {
-        this.setState({ currentUser: null });
+        this.props.setCurrentUsera(null);
       }
     });
   }
@@ -40,15 +45,31 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact path="/" component={HomePage} />
           <Route exact path="/shop" component={ShopPage} />
-          <Route exact path="/signin" component={SignInUpPage} />
+          <Route
+            exact
+            path="/signin"
+            render={() =>
+              this.props.currentUsera ? <Redirect to="/" /> : <SignInUpPage />
+            }
+          />
         </Switch>
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => ({ currentUsera: state.user.currentUser });
+
+const mapDispatchToProps = (dispatch) => ({
+  // dispatching plain actions
+  //props_you_wanna_add: dispatch(the_action_function_in_redux_folder)
+  //setCurrentUser is imported from unser.action.js
+  setCurrentUsera: (user) => dispatch(setCurrentUser(user)),
+});
+//with above lines, now App.js has a prop called 'setCurrentUsera' which update the store with user argument
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

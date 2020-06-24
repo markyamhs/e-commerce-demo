@@ -15,7 +15,7 @@ class SignUp extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const { displayName, email, password, confirmPassword } = this.state;
-    if (password != confirmPassword) {
+    if (password !== confirmPassword) {
       alert("Password does not match with confirmed password!");
       return;
     }
@@ -60,7 +60,7 @@ class SignUp extends Component {
             name="displayName"
             label="your name to display"
             value={displayName}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
             required
           />
           <FormInput
@@ -68,7 +68,7 @@ class SignUp extends Component {
             name="email"
             label="your email"
             value={email}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
             required
           />
           <FormInput
@@ -76,7 +76,7 @@ class SignUp extends Component {
             name="password"
             label="your password"
             value={password}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
             required
           />
           <FormInput
@@ -84,7 +84,7 @@ class SignUp extends Component {
             name="confirmPassword"
             label="confirm your password"
             value={confirmPassword}
-            onChange={this.handleChange}
+            handleChange={this.handleChange}
             required
           />
           <CustomButton type="submit">Sign up</CustomButton>

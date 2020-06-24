@@ -1,4 +1,4 @@
-import { addItemQuantity } from "./cart.util";
+import { addItemQuantity, removeItem, minusItem } from "./cart.util";
 
 const initialState = {
   cartDropdownHidden: true,
@@ -19,6 +19,17 @@ const cartReducer = (state = initialState, action) => {
         cartItems: addItemQuantity(state.cartItems, action.payload),
       };
 
+    case "REMOVE_ITEM_FROM_CART":
+      return {
+        ...state,
+        cartItems: removeItem(state.cartItems, action.payload),
+      };
+
+    case "MINUS_ITEM_FROM_CART":
+      return {
+        ...state,
+        cartItems: minusItem(state.cartItems, action.payload),
+      };
     default:
       return state;
   }

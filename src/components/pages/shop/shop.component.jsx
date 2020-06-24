@@ -1,19 +1,17 @@
 import React, { Component } from "react";
-import SHOP_DATA from "./shop.data";
-import CollectionPreview from "../../collection-preview/collection-preview.component";
-class ShopPage extends Component {
-  state = {
-    collection: SHOP_DATA,
-  };
-  render() {
-    return (
-      <div className="shop-page">
-        {this.state.collection.map(({ id, ...others }) => (
-          <CollectionPreview key={id} {...others} />
-        ))}
-      </div>
-    );
-  }
-}
+import CollectionOverview from "../../collections-overview/collection-overview.component";
+import { Route } from "react-router-dom";
+import CategoryPage from "../../category/category.component";
+
+const ShopPage = ({ match }) => {
+  return (
+    <div className="shop-page">
+      {/* either one of the below page will fire, no need <switch>*/}
+      <Route exact path={`${match.path}`} component={CollectionOverview} />
+      {/* the : before categoryID makes categoryID a props of component={Category} => props.match.params.categoryID*/}
+      <Route path={`${match.path}/:categoryID`} component={CategoryPage} />
+    </div>
+  );
+};
 
 export default ShopPage;

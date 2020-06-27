@@ -10,17 +10,24 @@ import {
   auth,
   firestore,
   creatUserProfileDocument,
+  // addCollectionsObjects,
 } from "./firebase/firebase.utils";
 import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user.action";
 import { createStructuredSelector } from "reselect";
 import { selectCurrentUser } from "./redux/user/user.selector";
 import CheckoutPage from "./components/pages/checkout/checkout.component";
+import { selectShoplist } from "./redux/shop/shop.selector";
 class App extends Component {
   unsubscribe = null;
 
   componentDidMount() {
-    //the below line is hard to understand. By simply attaching a listener (i.e. onAuthStateChanged) to auth to variable this.unsubscribe
+    //the below one-line code is to add the SHOP_DATA (processed by selector 'selectShoplist',hence a list)
+    //to firestore in batch
+    //it is used once only to upload the data programmatically
+    // addCollectionsObjects("collections", this.props.collections);
+
+    //the below lines are hard to understand. By simply attaching a listener (i.e. onAuthStateChanged) to auth to variable this.unsubscribe
     //the listener is in effect and will run whenever there is a change in Auth state
     //Also,  auth.onAuthStateChanged() return a function which when run, will stop (i.e. unsubscribe) the listener
     //Hence the this.unsubscribe(); in componentWillUnmount()
@@ -66,9 +73,8 @@ class App extends Component {
 
 const mapStateToProps = createStructuredSelector({
   currentUsera: selectCurrentUser,
+  // collections: selectShoplist,
 });
-
-//(state) => ({ currentUsera: state.user.currentUser });
 
 const mapDispatchToProps = (dispatch) => ({
   // dispatching plain actions

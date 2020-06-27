@@ -73,3 +73,25 @@ export const creatUserProfileDocument = async (userAuth, additionalData) => {
   }
   return userRef;
 };
+
+//the below code is to add the SHOP_DATA (processed by selector 'selectShoplist',hence a list)
+//to firestore in batch
+//it is used once only to upload the data programmatically
+export const addCollectionsObjects = async (collectionID, objsListToAdd) => {
+  const collectionRef = firestore.collection(collectionID);
+  const batch = firestore.batch();
+  objsListToAdd.forEach((obj) => {
+    const newDocRef = collectionRef.doc();
+    batch.set(newDocRef, obj);
+  });
+
+  await batch.commit();
+  console.log("batch uploaded!");
+};
+
+export const convertCollectionSnapshotToObject = (collectionSnapshot) => {
+  return collectionSnapshot.docs.reduce((acc, doc) => {
+    acc[doc.data().title.toLowerCase()] = doc.data();
+    return acc;
+  }, {});
+};

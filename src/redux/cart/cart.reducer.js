@@ -1,4 +1,5 @@
 import { addItemQuantity, removeItem, minusItem } from "./cart.util";
+import cartActionTypes from "./cart.types";
 
 const initialState = {
   cartDropdownHidden: true,
@@ -7,6 +8,12 @@ const initialState = {
 
 const cartReducer = (state = initialState, action) => {
   switch (action.type) {
+    case cartActionTypes.CLEAR_CART:
+      return {
+        ...state,
+        cartItems: [],
+      };
+
     case "TOGGLE_CART_DROPDOWN":
       return {
         ...state,

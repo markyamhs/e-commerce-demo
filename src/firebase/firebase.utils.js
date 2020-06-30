@@ -22,7 +22,7 @@ firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
 //https://firebase.google.com/docs/auth/web/google-signin?authuser=0
-var provider = new firebase.auth.GoogleAuthProvider();
+export const googleProvider = new firebase.auth.GoogleAuthProvider();
 
 // provider.setCustomParameters({
 //   prompt: "select_account",
@@ -32,27 +32,6 @@ var provider = new firebase.auth.GoogleAuthProvider();
 export default firebase;
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
-export const firebaseGoogle = () =>
-  firebase
-    .auth()
-    .signInWithPopup(provider)
-    .then(function (result) {
-      // This gives you a Google Access Token. You can use it to access the Google API.
-      var token = result.credential.accessToken;
-      // The signed-in user info.
-      var user = result.user;
-      // ...
-    })
-    .catch(function (error) {
-      // Handle Errors here.
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      // The email of the user's account used.
-      var email = error.email;
-      // The firebase.auth.AuthCredential type that was used.
-      var credential = error.credential;
-      // ...
-    });
 
 export const creatUserProfileDocument = async (userAuth, additionalData) => {
   if (!userAuth) return;
@@ -94,4 +73,17 @@ export const convertCollectionSnapshotToObject = (collectionSnapshot) => {
     acc[doc.data().title.toLowerCase()] = doc.data();
     return acc;
   }, {});
+};
+
+//the below lines are hard to understand. By simply attaching a listener (i.e. onAuthStateChanged) to auth to variable this.unsubscribe
+//the listener is in effect and will run whenever there is a change in Auth state
+//Also,  auth.onAuthStateChanged() return a function which when run, will stop (i.e. unsubscribe) the listener
+//Hence the unsubscribe() to prevent listening since we only want one time check
+export const getCurrentUser = () => {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((userAuth) => {
+      resolve(userAuth);
+      unsubscribe();
+    }, reject);
+  });
 };

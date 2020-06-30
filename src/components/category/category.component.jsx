@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./category.styles.scss";
 import CollectionItem from "../collection-item/collection-item.component";
 import { selectCollection } from "../../redux/shop/shop.selector";

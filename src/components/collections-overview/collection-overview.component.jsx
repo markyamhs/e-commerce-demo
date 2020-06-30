@@ -1,6 +1,6 @@
-import React, { Component } from "react";
-import CollectionPreview from "../collection-preview/collection-preview.component";
+import React from "react";
 import { connect } from "react-redux";
+import CollectionPreview from "../collection-preview/collection-preview.component";
 import { selectShoplist } from "../../redux/shop/shop.selector";
 import "./collections-overview.styles.scss";
 
@@ -13,7 +13,6 @@ const CollectionOverview = ({ collections }) => {
     </div>
   );
 };
-
 const mapStateToProps = (state) => ({
   collections: selectShoplist(state),
 });

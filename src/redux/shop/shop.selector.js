@@ -12,3 +12,8 @@ export const selectCollection = (paramsURL) =>
     selectShop,
     (selectedShop) => selectedShop.collections[paramsURL]
   );
+
+export const selectIsItemsLoaded = createSelector(
+  selectShop,
+  (selectedShop) => !!selectedShop.collections
+);
